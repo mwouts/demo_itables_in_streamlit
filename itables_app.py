@@ -15,6 +15,9 @@ with logo_col:
     )
 with title_col:
     st.markdown("# Display DataFrames with ITables in a Streamlit Application")
+    st.markdown(
+        "See the documentation at [mwouts.github.io/itables](https://mwouts.github.io/itables/streamlit.html)"
+    )
 
 caption_col, classes_col, buttons_col, style_col, render_with_col = st.columns(
     [0.10, 0.25, 0.25, 0.20, 0.10]
@@ -70,7 +73,7 @@ tabs = st.tabs(test_dfs.keys())
 for (name, df), tab in zip(test_dfs.items(), tabs):
     with tab:
         try:
-            interactive_table(df, key=name)
+            interactive_table(df, key=name, classes=classes, style=style)
         except (
             # ITables
             NotImplementedError,
