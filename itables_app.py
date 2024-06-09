@@ -5,6 +5,7 @@ import streamlit as st
 from itables.sample_dfs import get_countries, get_dict_of_test_dfs
 from itables.streamlit import interactive_table
 from st_aggrid import AgGrid
+from streamlit.components.v1 import html
 from streamlit.components.v1.components import MarshallComponentException
 
 st.set_page_config(layout="wide")
@@ -14,10 +15,30 @@ with logo_col:
         "![ITables](https://raw.githubusercontent.com/mwouts/itables/main/src/itables/logo/logo.svg)"
     )
 with title_col:
-    st.markdown("# Display DataFrames with ITables in a Streamlit Application")
-    st.markdown(
-        "See the documentation at [mwouts.github.io/itables](https://mwouts.github.io/itables/streamlit.html)"
+    html(
+        """
+         <h1>
+         <a href="https://mwouts.github.io/itables">ITables</a>
+         <a class="github-button" href="https://github.com/mwouts/itables" data-icon="octicon-star" data-show-count="true"></a>
+         in Streamlit</h1>
+         <h2>Python DataFrames as Interactive <a href="https://datatables.net">DataTables</a>
+         </h2>
+        <script src="https://buttons.github.io/buttons.js"></script>"""
     )
+
+st.header("Code snippet")
+
+st.markdown(
+    """
+```python
+from itables.streamlit import interactive_table
+
+interactive_table(df, ...)  # add caption, buttons, style, etc ... like you do with 'show' in a notebook
+```
+"""
+)
+
+st.header("Countries")
 
 caption_col, classes_col, buttons_col, style_col, render_with_col = st.columns(
     [0.10, 0.25, 0.25, 0.20, 0.10]
@@ -30,8 +51,8 @@ classes = classes_col.multiselect(
 )
 buttons = buttons_col.multiselect(
     "Buttons",
-    options=["pageLength", "copyHtml5", "csvHtml5", "excelHtml5"],
-    default=["copyHtml5", "csvHtml5", "excelHtml5"],
+    options=["pageLength", "copyHtml5", "csvHtml5", "excelHtml5", "colvis"],
+    default=["copyHtml5", "csvHtml5", "excelHtml5", "colvis"],
 )
 
 style = style_col.text_input(
@@ -60,7 +81,6 @@ it_args = dict(
 if buttons:
     it_args["buttons"] = buttons
 
-st.header("Countries")
 include_html = st.checkbox("Include HTML")
 df = get_countries(html=include_html)
 
