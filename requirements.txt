@@ -1,5 +1,5 @@
 streamlit>=1.35
-itables>=2.1.0rc3
+itables>=2.2.1
 
 # For comparison with st_aggrid
 streamlit-aggrid

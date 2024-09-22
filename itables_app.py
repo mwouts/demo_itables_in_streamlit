@@ -8,6 +8,10 @@ from itables.streamlit import interactive_table
 from st_aggrid import AgGrid
 from streamlit.components.v1.components import MarshallComponentException
 
+st.set_page_config(
+    page_title="ITables in Streamlit",
+    page_icon="https://raw.githubusercontent.com/mwouts/itables/main/src/itables/logo/loading.svg",
+)
 st.logo(
     "https://raw.githubusercontent.com/mwouts/itables/main/src/itables/logo/logo.svg",
     link="https://mwouts.github.io/itables/streamlit.html",
@@ -22,8 +26,8 @@ st.sidebar.markdown(
                     """
 )
 
-
 caption = st.sidebar.text_input("Caption", value="Countries")
+select = st.sidebar.toggle("Row selection", value=True)
 classes = st.sidebar.multiselect(
     "Classes",
     options=["display", "nowrap", "compact", "cell-border", "stripe"],
@@ -41,7 +45,13 @@ render_with = st.sidebar.selectbox(
     "Render with", ["st.dataframe", "streamlit-aggrid", "itables"], index=2
 )
 
+include_html = st.sidebar.checkbox("Include HTML")
+df = get_countries(html=include_html)
+
 it_args = {}
+if select:
+    it_args["select"] = True
+    it_args["selected_rows"] = [0, 1, 2, 100, 207]
 if classes != it_opt.classes.split(" "):
     it_args["classes"] = classes
 if style != it_opt.style:
@@ -50,7 +60,6 @@ if style != it_opt.style:
 if buttons:
     it_args["buttons"] = buttons
 
-include_html = st.sidebar.checkbox("Include HTML")
 
 if caption:
     it_args = {"caption": caption, **it_args}
@@ -90,9 +99,14 @@ st.markdown(
 """
 )
 
-df = get_countries(html=include_html)
+t = interactive_table(df, **it_args)
 
-interactive_table(df, **it_args)
+st.header("Table state")
+st.markdown(
+    """The value returned by `interactive_table` is
+a dict that contains the index of the selected rows:"""
+)
+st.write(t)
 
 st.header("More sample dataframes")
 test_dfs = get_dict_of_test_dfs()
